@@ -3,7 +3,7 @@ defmodule Project2.Mixfile do
 
   def project do
     [
-      app: :project2-bonus,
+      app: :project2_bonus,
       version: "0.1.0",
       elixir: "~> 1.5",
       start_permanent: Mix.env == :prod,

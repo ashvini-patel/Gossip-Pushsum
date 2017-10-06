@@ -4,8 +4,9 @@ defmodule Boss do
     end
     defp parse_args(args) do
         cmdarg = OptionParser.parse(args)
-        {[],[numNodes,topology,algorithm],[]} = cmdarg
+        {[],[numNodes,topology,algorithm,fail],[]} = cmdarg
         numInt = String.to_integer(numNodes)
+        fail_prob = String.to_integer(fail)
         #IO.puts "#{inspect(self)}"
         Process.register(self(),:boss)
         
@@ -15,7 +16,7 @@ defmodule Boss do
             true -> numInt
         end
         
-        ApplicationSupervisor.start_link([numInt,topology,algorithm])
+        ApplicationSupervisor.start_link([numInt,topology,algorithm,fail_prob])
         boss_receiver(topology,nil,numInt)
     end
             
@@ -30,7 +31,8 @@ defmodule Boss do
                 #rstring = "This is the first rumour"
                 a = System.system_time(:millisecond)
                 if topology == "line" || topology =="full" do
-                    GenServer.cast(String.to_atom("node#{:rand.uniform(numInt)}"), {:rumour, rstring})
+                    entry = String.to_atom("node#{:rand.uniform(numInt)}")
+                    GenServer.cast(entry, {:rumour, rstring})
                 end
                 if topology == "2D" || topology =="imp2D" do
                     sqn= round(:math.sqrt(numInt))

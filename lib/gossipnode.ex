@@ -1,13 +1,13 @@
 defmodule GossipNode do
   use GenServer
   
-  def start_link(top,n,x) do
+  def start_link(top,n,x,failprob) do
     sqn=round(:math.sqrt(n))
     i = div((x-1),sqn) + 1
     j = rem((x-1),sqn) + 1 
     returnok = {:ok,_pid} = cond do
-      (top == "line")||(top == "full") ->  GenServer.start_link(__MODULE__, {top,n,x,0}, name: String.to_atom("node#{x}"))
-      (top == "2D") || (top == "imp2D") ->  GenServer.start_link(__MODULE__, {top,n,i,j}, name: String.to_atom("node#{i}@#{j}"))
+      (top == "line")||(top == "full") ->  GenServer.start_link(__MODULE__, {top,n,x,0,failprob}, name: String.to_atom("node#{x}"))
+      (top == "2D") || (top == "imp2D") ->  GenServer.start_link(__MODULE__, {top,n,i,j,failprob}, name: String.to_atom("node#{i}@#{j}"))
     end
   returnok
   end
@@ -22,7 +22,7 @@ defmodule GossipNode do
         end
   end
 
-  def init({top,n,i,j}) do
+  def init({top,n,i,j,failprob}) do
     sqn= round(:math.sqrt(n))
     list = cond do
       (top == "full") -> []  
@@ -47,7 +47,16 @@ defmodule GossipNode do
       list = list ++ [String.to_atom("node#{randi}@#{randj}")]
     end
     # IO.puts "sqn=#{sqn} i=#{i} j=#{j} list=#{inspect(list)}"
-    {:ok,{n,list,0}}
+    pool = Enum.to_list 1..100
+    f_pool = Enum.take_random(pool,failprob)
+    
+    if (Enum.member?(f_pool,:rand.uniform(100))) do
+        counter = 10
+        GenServer.cast(:gcounter, :simulatefailure)
+    else
+        counter = 0
+    end
+    {:ok,{n,list,counter}}
   end
  
   def handle_cast({:rumour,rsrting},{n,list,localcount})do

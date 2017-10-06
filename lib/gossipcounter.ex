@@ -10,9 +10,14 @@ defmodule GossipCounter do
         {:ok,{0,numnodes}}
     end
 
+    def handle_cast(:simulatefailure,{count,numnodes})do
+        # IO.puts "total active nodes is now #{numnodes-1}"
+        {:noreply,{count,numnodes-1}}
+    end
+
     def handle_cast(:heardrumour,{count,numnodes})do
         newcount=count+1
-        #IO.puts "#{newcount} node/s have heard the rumour."
+        # IO.puts "#{newcount} node/s have heard the rumour."
         if newcount == numnodes do
             b = System.system_time(:millisecond)
             IO.puts "Rumour Propogated, Terminating."

@@ -6,11 +6,11 @@ defmodule ApplicationSupervisor do
         return
     end
     
-    def start_workers(sup, [numNodes,topology,algorithm]) do
+    def start_workers(sup, [numNodes,topology,algorithm,fail_prob]) do
     
         if algorithm == "gossip" do
             {:ok, gcpid} = Supervisor.start_child(sup, worker(GossipCounter, [numNodes]))     
-            Supervisor.start_child(sup, supervisor(GossipSupervisor, [numNodes,topology,gcpid]))
+            Supervisor.start_child(sup, supervisor(GossipSupervisor, [numNodes,topology,fail_prob,gcpid]))
         end
 
         if algorithm == "push-sum" do
