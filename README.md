@@ -1,7 +1,7 @@
 # README #
 Group members:
-Dhruv Mahajan 4211-1994
-Ashvini Patel 4794-9297
+- Dhruv Mahajan 
+- Ashvini Patel 
 
 
 ##### PROBLEM DEFINITION:
