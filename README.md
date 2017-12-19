@@ -37,13 +37,12 @@ To run provide the command as follows :
 
 ./project2_bonus numNodes topology algorithm P
 
-where numNodes is the number of actors involved
-      topology is one of {line, full, 2D, imp2D}
-      algorithm is one of {gossip, push-sum}
-      P can take any value from 1 to 100
-      Note: Run project2_bonus and DO NOT add percentage symbol after P. 
+where,
 
-
+numNodes is the number of actors involved
+topology is one of {line, full, 2D, imp2D}
+algorithm is one of {gossip, push-sum}
+P can take any value from 1 to 100
 
 ##### Output:
 
